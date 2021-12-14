@@ -46,6 +46,9 @@ enum custom_keycodes {
     LED_EQL,
 };
 
+#define MY_COLOR_RGB_PURPLE 0xC1, 0xB3, 0xD7
+#define MY_COLOR_RGB_BLUE 0x6F, 0xB7, 0xD6
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // The FN key by default maps to a momentary toggle to layer 1 to provide access to the RESET key (to put the board into bootloader mode). Without
     // this mapping, you have to open the case to hit the button on the bottom of the PCB (near the USB cable attachment) while plugging in the USB
@@ -228,6 +231,31 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 }
 
 #ifdef RGB_MATRIX_ENABLE
+
+int rgb_current_layer = -1;
+
+#define COLOR_HSV_PURPLE      191, 255, 128
+#define COLOR_HSV_BLUE        170, 255, 128
+#define COLOR_HSV_GREEN       85, 255, 128
+
+
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    int current_default_layer = get_highest_layer(default_layer_state);
+    if(rgb_current_layer != current_default_layer){
+        rgb_current_layer = current_default_layer;
+        switch (rgb_current_layer) {
+            case _BASE:
+                rgb_matrix_sethsv(COLOR_HSV_PURPLE);
+                break;
+            case _WIN:
+                rgb_matrix_sethsv(COLOR_HSV_BLUE);
+                break;
+            case _GTA:
+                rgb_matrix_sethsv(COLOR_HSV_GREEN);
+                break;
+        }
+    }
+}
 
 #endif // RGB_MATRIX_ENABLE
 
